@@ -193,6 +193,15 @@ public class LoanCalcViewController implements Initializable {
 	@FXML
 	private void btnClearResultsKeyPress(KeyEvent event) {
 		// TODO: Call the method to clear the results
+		btnClearResultsKeyPress(event);
+		colPaymentNumber.clear();
+		colPaymentAmount.clear();
+		colDueDate.clear();
+		colAdditionalPayment.clear();
+		colInterest.clear();
+		colPrinciple.clear();
+		colEscrow.clear();
+		colBalance.clear();
 	}
 
 	/**
@@ -208,6 +217,13 @@ public class LoanCalcViewController implements Initializable {
 		hbChart.getChildren().clear();
 
 		// TODO: Clear all the output labels (lblTotalPayemnts, lblTotalInterest, etc)
+		lblEscrow.clear();
+		lblTotalPayemnts.clear();
+		lblTotalInterest.clear();
+		lblInterestSaved.clear();
+		lblMonthlyPayment.clear();
+		lblPaymentsSaved.clear();
+		
 		lblTotalPayemnts.setText("");
 	}
 
@@ -231,6 +247,12 @@ public class LoanCalcViewController implements Initializable {
 		// TODO: Validate NbrOfYears is a non blank positive integer
 		// TODO: Validate AdditionalPayment, if given, is a positive double
 		// TODO: Validate EscrowAmount, if given, is a positive double
+		if(LoanAmount<0) {
+			Message loanamount="loanamount should be positive";
+		}
+		else if(1<InterestRate&&InterestRate<30) {
+			Message rate="interestRate should be between 1 and 30"
+		}
 
 		return true;
 	}
@@ -245,6 +267,22 @@ public class LoanCalcViewController implements Initializable {
 	private void btnCalcLoan(ActionEvent event) {
 
 		// TODO: Call the method to Clear the Results
+		lblEscrow.clear();
+		lblTotalPayemnts.clear();
+		lblTotalInterest.clear();
+		lblInterestSaved.clear();
+		lblMonthlyPayment.clear();
+		lblPaymentsSaved.clear();
+		
+		colPaymentNumber.clear();
+		colPaymentAmount.clear();
+		colDueDate.clear();
+		colAdditionalPayment.clear();
+		colInterest.clear();
+		colPrinciple.clear();
+		colEscrow.clear();
+		colBalance.clear();
+
 
 		// Validate the data. If the method returns 'false', exit the method
 		if (ValidateData() == false)
@@ -269,11 +307,11 @@ public class LoanCalcViewController implements Initializable {
 		NumberFormat fmtCurrency = NumberFormat.getCurrencyInstance(Locale.US);
 		lblTotalPayemnts.setText(fmtCurrency.format(loanExtra.getTotalPayments()));
 		// TODO: Set lblTotalInterest label with loanExtra's total interest payments
-
+		lblTotalInterest.setText(fmtCurrency.format(loanExtra.getTotalInterest()));
 		// TODO: Set lblTotalInterest label with loanExtra's PMT
-
+		lblTotalInterest.setText(fmtCurrency.format(loanExtra.GetPMT()));
 		// TODO: Set lblInterestSaved to the total interest saved
-
+		lblInterestSaved.setText();
 		lblPaymentsSaved
 				.setText(String.valueOf(loanNoExtra.getLoanPayments().size() - loanExtra.getLoanPayments().size()));
 
