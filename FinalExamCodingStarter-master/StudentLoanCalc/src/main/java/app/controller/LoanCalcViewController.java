@@ -119,6 +119,9 @@ public class LoanCalcViewController implements Initializable {
 	private AnchorPane apAreaChart;
 
 	@FXML
+	private HBox stackedBarChart;
+	
+	@FXML
 	private AreaChart<Number, Number> areaChartAmortization = null;
 
 	@FXML
@@ -1016,5 +1019,47 @@ public class LoanCalcViewController implements Initializable {
 		apAreaChart.getChildren().add(ac);
 
 	}
+	
+	private void createStackedBar() {
+		  CategoryAxis xAxis = new CategoryAxis();
+		  ArrayList<String> dates = new ArrayList<String>();
+		  // Prepare XYChart.Series objects
+		  XYChart.Series<String, Number> principalPayments = new XYChart.Series<>();
+		  principalPayments.setName("Principle");
+		  XYChart.Series<String, Number> interestPayments = new XYChart.Series<>();
+		  interestPayments.setName("Interest");
+		  
+		  XYChart.Series<String, Number> escrowPayments = new XYChart.Series<>();
+		  escrowPayments.setName("Escrow");
+		  
+		  for (Payment P : paymentList) {
+		   if (!dates.contains(Integer.toString(P.getDueDate().getYear()))) {
+		    dates.add(Integer.toString(P.getDueDate().getYear()));
+		   }
+		   principalPayments.getData().add(new XYChart.Data<String, Number>(
+		     Integer.toString(P.getDueDate().getYear()), 
+		     P.getPrinciple()+P.getAdditionalPayment()));
+		   interestPayments.getData().add(new XYChart.Data<String, Number>(
+		     Integer.toString(P.getDueDate().getYear()), 
+		     P.getInterestPayment()));
+		   
+		   escrowPayments.getData().add(new XYChart.Data<String, Number>(
+		     Integer.toString(P.getDueDate().getYear()), 
+		     P.getEscrowPayment()));
+		  }
+		  
+		  xAxis.setCategories(FXCollections
+		    .<String>observableArrayList(dates));
+		  xAxis.setLabel("Year");
+		  NumberAxis yAxis = new NumberAxis();
+		  yAxis.setLabel("Amount (USD)");
+		  // Creating the Bar chart
+		  StackedBarChart<String, Number> mystackedBarChart = new StackedBarChart<>(xAxis, yAxis);
+		  mystackedBarChart.setTitle("Monthly Payments");
+		  // Setting the data to bar chart
+		  mystackedBarChart.getData().addAll(principalPayments, interestPayments, escrowPayments);
+		  stackedBarChart.getChildren().add(mystackedBarChart);
+		  
+		 }
 
 }

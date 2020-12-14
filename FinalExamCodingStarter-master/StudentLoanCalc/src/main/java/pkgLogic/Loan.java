@@ -31,7 +31,7 @@ public class Loan {
 
 		double RemainingBalance = LoanAmount;
 		int PaymentCnt = 1;
-		while (RemainingBalance >= this.GetPMT()) {
+		while (RemainingBalance >= this.GetPMT()+this.AdditionalPayment()) {
 			Payment payment = new Payment(RemainingBalance, PaymentCnt++, startDate, this, false);
 			RemainingBalance = payment.getEndingBalance();
 			startDate = startDate.plusMonths(1);
@@ -43,20 +43,26 @@ public class Loan {
 	}
 
 	public double GetPMT() {
-		double PMT = Math.abs(FinanceLib.pmt(InterestRate/12, LoanPaymentCnt*12, LoanAmount, LoanBalanceEnd, bCompoundingOption));
+		double PMT = Math.abs(FinanceLib.pmt(InterestRate/12, LoanPaymentCnt, LoanAmount, LoanBalanceEnd, bCompoundingOption));
 		//TODO: Execute PMT function to determine payment with given rate, nbr of payments, PV, FV, compounding)
 		return PMT;
 	}
 
 	public double getTotalPayments() {
 		//TODO: Return the total payments for the loan
-		double tot = LoanPaymentCnt*GetPMT();
+		double tot =0;
+		for (Payment e: loanPayments) {
+			tot += e.getPayment();
+		}
 		return tot;
 	}
 
 	public double getTotalInterest() {
 		//TODO: Return the total interest for the loan
-		double interest = Payment Payment;
+		double interest = 0;
+		for (Payment e: loanPayments) {
+			interest += getInterestPayment();
+		}
 		return interest;
 	}
 
