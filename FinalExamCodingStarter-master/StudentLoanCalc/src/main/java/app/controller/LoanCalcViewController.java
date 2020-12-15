@@ -52,13 +52,13 @@ public class LoanCalcViewController implements Initializable {
 	private ComboBox cmbLoanType;
 
 	@FXML
-	private TextField LoanAmount;
+	private java.awt.TextField LoanAmount;
 
 	@FXML
-	private TextField InterestRate;
+	private java.awt.TextField InterestRate;
 
 	@FXML
-	private TextField NbrOfYears;
+	private java.awt.TextField NbrOfYears;
 
 	@FXML
 	private DatePicker PaymentStartDate;
@@ -133,7 +133,7 @@ public class LoanCalcViewController implements Initializable {
 		cmbLoanType.getItems().addAll("Home", "Auto", "School");
 
 		// TODO: Default cmbLoanType to select 'Home' as the default loan type
-
+		cmbLoanType.setValue("Home");
 		cmbLoanType.valueProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue ov, String t, String t1) {
@@ -233,25 +233,60 @@ public class LoanCalcViewController implements Initializable {
 		// Hint: Use StringBuilder for the 'setContentText' message.
 
 		// Validate LoanAmount isn't empty
+
+		StringBuilder message = new StringBuilder();
+		int messagecnt=0;
 		if (LoanAmount.getText().trim().isEmpty()) {
-			Alert fail = new Alert(AlertType.ERROR);
-			fail.setHeaderText("Missing Data");
-			fail.setContentText("Loan Amount is required");
-			fail.showAndWait();
-			return false;
+			messagecnt++;
+			message.append("LoanAmount is required\n");
 		}
 
+		
 		// TODO: Validate LoanAmount is a positive double
-		// TODO: Validate InterestRate is not blank and is a positive double. Validate
-		// that the value is between 1 and 30 (2.99 = 2.99%, not 0.0299)
-		// TODO: Validate NbrOfYears is a non blank positive integer
-		// TODO: Validate AdditionalPayment, if given, is a positive double
-		// TODO: Validate EscrowAmount, if given, is a positive double
-		if(LoanAmount<0) {
-			Message loanamount="loanamount should be positive";
+		else if (!LoanAmount.getText().trim().isEmpty()&&Double.parseDouble(LoanAmount.getText())<=0) {
+			messagecnt++;
+			message.append("LoanAmount should be positive double\n")
 		}
-		else if(1<InterestRate&&InterestRate<30) {
-			Message rate="interestRate should be between 1 and 30"
+		// TODO: Validate InterestRate is not blank and is a positive double. Validate
+		else if (InterestRate.getText().trim().isEmpty()) {
+			messagecnt++;
+			message.append("InterestRate is required\n")
+		}
+		else if (!InterestRate.getText().trim().isEmpty()&&Double.parseDouble(InterestRate.getText())<=0) {
+			messagecnt++;
+			message.append("InterestRate should be positive\n")
+		}
+		// that the value is between 1 and 30 (2.99 = 2.99%, not 0.0299)
+		else if (!InterestRate.getText().trim().isEmpty()&&!Double.parseDouble(InterestRate.getText())<=0&&(Double.parseDouble(InterestRate.getText())<1)||(Double.parseDouble(InterestRate.getText())>30)) {
+			messagecnt++;
+			message.append("InterestRate should between 1 and 30\n")
+		}
+		// TODO: Validate NbrOfYears is a non blank positive integer
+		else if (NbrOfYears.getText().trim().isEmpty()) {
+			messagecnt++;
+			message.append("Number Of Years is required\n")
+		}
+		else if (!NbrOfYears.getText().trim().isEmpty()&&Integer.parseInt(NbrOfYears.getText()<=0)) {
+			messagecnt++;
+			message.append("Number Of Years should be positive\n")
+		}
+		// TODO: Validate AdditionalPayment, if given, is a positive double
+		else if (!AdditionalPayment.getText().trim().isEmpty()&&Double.parseDouble(AdditionalPayment.getText()<=0)) {
+			messagecnt++;
+			message.append("Additional Payment should be positive\n")
+		}
+		// TODO: Validate EscrowAmount, if given, is a positive double
+		else if (!EscrowAmount.getText().trim().isEmpty()&&Double.parseDouble(EscrowAmount.getText()<=0)) {
+			messagecnt++;
+			message.append("Escrow Amount should be positive\n")
+		}
+		
+		if(message>0) {
+			Alert fail= new Alert(AlertType.ERROR);
+			fail.setHeaderText("Alter!");
+			fail.setContenText(error.toString());
+			fail.showAndWait();
+			return false;
 		}
 
 		return true;
@@ -311,7 +346,7 @@ public class LoanCalcViewController implements Initializable {
 		// TODO: Set lblTotalInterest label with loanExtra's PMT
 		lblTotalInterest.setText(fmtCurrency.format(loanExtra.GetPMT()));
 		// TODO: Set lblInterestSaved to the total interest saved
-		lblInterestSaved.setText();
+		lblInterestSaved.setText(fmtCurrency.format(loanExtra.getTotalInterest()));
 		lblPaymentsSaved
 				.setText(String.valueOf(loanNoExtra.getLoanPayments().size() - loanExtra.getLoanPayments().size()));
 

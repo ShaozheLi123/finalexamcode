@@ -43,7 +43,7 @@ public class Loan {
 	}
 
 	public double GetPMT() {
-		double PMT = Math.abs(FinanceLib.pmt(InterestRate/12, LoanPaymentCnt, LoanAmount, LoanBalanceEnd, bCompoundingOption));
+		double PMT = Math.abs(FinanceLib.pmt(this.getInterestRate() / 12, this.getLoanPaymentCnt(), this.getLoanAmount(), this.getLoanBalanceEnd(), this.isbCompoundingOption());
 		//TODO: Execute PMT function to determine payment with given rate, nbr of payments, PV, FV, compounding)
 		return PMT;
 	}
